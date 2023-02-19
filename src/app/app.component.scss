@@ -1,0 +1,31 @@
+.row-main {
+  width: 100%;
+  height: 100vh;
+  background-color: red;
+}
+
+.row-editor {
+  width: 600px;
+  height: 100vh;
+  background-color: purple;
+  float: left;
+}
+
+.row-diagram {
+  height: 100vh;
+  width: calc(100% - 600px);
+  background-color: darkcyan;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .diagram {
+    background-color: orange;
+    height: 90vh;
+    width: 90%;
+  }
+}
+
+ngs-code-editor {
+  height: 100vh;
+}
