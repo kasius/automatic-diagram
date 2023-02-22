@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ThisReceiver } from '@angular/compiler';
+import { Component, OnInit } from '@angular/core';
 import * as shape from 'd3-shape';
 export interface CodeModel {
   language: string;
@@ -12,88 +13,138 @@ export interface CodeModel {
   }>;
 }
 
-const model = {
-  name: 'es',
-  value: 'bff-seguros',
-  uri: '',
-};
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   theme = 'vs-dark';
-  curve = shape.curveStep;
+  curve = shape.curveCardinal;
   flag = false;
+  links: any = [];
+  nodes: any = [];
+  clusters: any = [];
 
   codeModel: CodeModel = {
     language: 'json',
     uri: 'main.json',
     value: `{
       "curve": "shape.curveStep",
-      "view": [800, 550],
+      "view": [1000, 1000],
       "links": [
               {
                 "id": "a",
-                "source": "first",
-                "target": "second",
-                "label": "is parent of"
+                "source": "primero",
+                "target": "segundo",
+                "label": "https services"
               },
               {
                 "id": "b",
-                "source": "first",
-                "target": "c1",
-                "label": "custom label"
+                "source": "primero",
+                "target": "tercero",
+                "label": "https services"
               },
               {
-                "id": "d",
-                "source": "first",
-                "target": "c2",
-                "label": "custom label"
+                "id": "quinto",
+                "source": "primero",
+                "target": "cuarto",
+                "label": "https services"
               },
               {
                 "id": "e",
-                "source": "c1",
-                "target": "d",
-                "label": "first link"
+                "source": "primero",
+                "target": "quinto",
+                "label": "https services"
               },
               {
                 "id": "f",
-                "source": "c1",
-                "target": "d",
-                "label": "second link"
+                "source": "primero",
+                "target": "sexto",
+                "label": "https services"
+              },
+{
+                "id": "g",
+                "source": "quinto",
+                "target": "septimo",
+                "label": "sql"
+              },
+{
+                "id": "x",
+                "source": "sexto",
+                "target": "septimo",
+                "label": "sql"
+              },
+{
+                "id": "t",
+                "source": "cuarto",
+                "target": "septimo",
+                "label": "sql"
+              },
+{
+                "id": "xx",
+                "source": "tercero",
+                "target": "septimo",
+                "label": "sql"
+              },
+{
+                "id": "ge",
+                "source": "segundo",
+                "target": "septimo",
+                "label": "sql"
+              },
+{
+                "id": "gee",
+                "source": "septimo",
+                "target": "octavo",
+                "label": "bus"
               }
             ],
       "nodes": 
             [
               {
-                "id": "first",
-                "label": "seguros"
+                "id": "primero",
+                "label": "APP"
               },
               {
-                "id": "second",
-                "label": "B"
+                "id": "segundo",
+                "label": "BFF-AUTENTICACION"
               },
               {
-                "id": "c1",
-                "label": "C1"
+                "id": "tercero",
+                "label": "BFF-HOME"
               },
               {
-                "id": "c2",
-                "label": "C2"
+                "id": "cuarto",
+                "label": "BFF-TRANSFERENCIAS"
               },
               {
-                "id": "d",
-                "label": "D"
+                "id": "quinto",
+                "label": "API-CREDITOS"
+              },
+              {
+                "id": "sexto",
+                "label": "API-MOVIMIENTOS"
+              },
+              {
+                "id": "septimo",
+                "label": "API-CONNECT"
+              },
+              {
+                "id": "octavo",
+                "label": "BBDD"
               }
             ],
       "clusters": [
         {
-          "id": "third",
-          "label": "Cluster nodesss",
-          "childNodeIds": ["c1", "c2", "d"]
+          "id": "bffs",
+          "label": "bff services",
+          "childNodeIds": ["segundo", "tercero", "cuarto"]
+        },
+        {
+          "id": "apis",
+          "label": "api services",
+          "childNodeIds": ["quinto", "sexto"]
         }
       ],
       "layout": "dagreCluster"
@@ -107,11 +158,49 @@ export class AppComponent {
     },
   };
 
+  ngOnInit(): void {
+    this.links = this.parseJson(this.codeModel.value).links;
+    this.nodes = this.parseJson(this.codeModel.value).nodes;
+    this.clusters = this.parseJson(this.codeModel.value).clusters;
+  }
+
+  addElement() {
+    // this.codeModel.value = [
+    //   ...this.codeModel.value.links,
+    //   {
+    //     id: 'ddddd',
+    //     source: 'ddddd',
+    //     target: 'ddddd',
+    //     label: 'second cdddd',
+    //   },
+    // ];
+    this.nodes.push({
+      id: 'w',
+      label: 'W',
+    });
+    console.log('this.nodes...');
+    console.log(this.nodes);
+    console.log('this.nodes...');
+  }
+
   onCodeChanged(value: any) {
-    this.flag= true;
+    this.flag = true;
     console.log('CODE', value);
-    this.codeModel.value = JSON.parse(this.codeModel.value).nodes;
-    console.log(this.codeModel.value.nodes);
+    const data = JSON.parse(value);
+    console.log('data...');
+    console.log(data);
+    console.log('data...');
+
+    this.links = data.links;
+    this.nodes = data.nodes;
+    this.clusters = data.clusters;
+  }
+
+  parseJson(arg0: any): any {
+    const fff = JSON.parse(arg0);
+    console.log('fff...');
+    console.log(fff);
+    console.log('fff...');
+    return fff;
   }
 }
-

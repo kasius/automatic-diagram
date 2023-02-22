@@ -1,6 +1,5 @@
 <div class="row-main">
   <div class="row-editor">
-    codeModel: <pre>{{codeModel.value | json}}</pre>
     <ngs-code-editor
       [theme]="theme"
       [codeModel]="codeModel"
@@ -8,75 +7,20 @@
       (valueChanged)="onCodeChanged($event)"
     >
     </ngs-code-editor>
+
+    <pre>{{ parseJson(codeModel.value) | json }}</pre> -->
   </div>
-  codeModel: {{codeModel.value | json}}
+  <!-- links: <pre> {{links | json}}</pre> -->
   <div class="row-diagram">
     <div class="diagram">
       <ngx-graph
         class="chart-container"
         [curve]="curve"
-        [view]="[800, 550]"
-        [links]="[
-          {
-            id: 'a',
-            source: 'first',
-            target: 'second',
-            label: 'is parent of'
-          },
-          {
-            id: 'b',
-            source: 'first',
-            target: 'c1',
-            label: 'custom label'
-          },
-          {
-            id: 'd',
-            source: 'first',
-            target: 'c2',
-            label: 'custom label'
-          },
-          {
-            id: 'e',
-            source: 'c1',
-            target: 'd',
-            label: 'first link'
-          },
-          {
-            id: 'f',
-            source: 'c1',
-            target: 'd',
-            label: 'second link'
-          }
-        ]"
-        [nodes]="flag === true ? codeModel.value.nodes : [
-          {
-            id: 'first',
-            label: 'seguros'
-          },
-          {
-            id: 'second',
-            label: 'B'
-          },
-          {
-            id: 'c1',
-            label: 'C1'
-          },
-          {
-            id: 'c2',
-            label: 'C2'
-          },
-          {
-            id: 'd',
-            label: 'D'
-          }
-        ]"
-        [clusters]="[
-          {
-            id: 'third',
-            label: 'Cluster nodesss',
-            childNodeIds: ['c1', 'c2', 'd']
-          }
-        ]"
+        [view]="[1500, 1000]"
+        [autoCenter]="true"
+        [links]="links"
+        [nodes]="nodes"
+        [clusters]="clusters"
         layout="dagreCluster"
       >
         <ng-template #defsTemplate>
@@ -94,10 +38,17 @@
         </ng-template>
 
         <ng-template #clusterTemplate let-cluster>
+          <svg:text
+              alignment-baseline="central"
+              [attr.x]="20"
+              [attr.y]="20"
+            >
+              {{ cluster.label }}
+            </svg:text>
           <svg:g class="node cluster">
             <svg:rect
-              rx="5"
-              ry="5"
+              rx="15"
+              ry="15"
               [attr.width]="cluster.dimension.width"
               [attr.height]="cluster.dimension.height"
               [attr.fill]="cluster.data.color"
